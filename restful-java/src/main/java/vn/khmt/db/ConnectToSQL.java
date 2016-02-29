@@ -9,8 +9,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import vn.khmt.entity.User;
 
 /**
  *
@@ -55,15 +54,25 @@ public class ConnectToSQL {
         return dbConnection;
     }
     
-    public String getUser(int id) {
+    public User getUser(int id) {
         try {
-            String SQL = "SELECT row_to_json(t) FROM public.user t WHERE t.id = " + id + ";";
+            String SQL = "SELECT * FROM public.user t WHERE t.id = " + id + ";";
             Statement stmt = this.dbConnection.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
 
             // Iterate through the data in the result set and display it.  
             if (rs.next()) {
-                return rs.getString(1);
+                User user = new User();
+                user.setId(rs.getInt(1));
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setStatus(rs.getInt(5));
+                user.setName(rs.getString(6));
+                return user;
+            }
+            else {
+                return new User();
             }
         } catch (SQLException sqle) {
             System.err.println(sqle.getMessage());
@@ -78,16 +87,57 @@ public class ConnectToSQL {
         }
         return null;
     }
-    public ArrayList<String> getUserList() {
+    public User getUser(String username, String password) {
         try {
-            String SQL = "SELECT public.user.username FROM public.user WHERE status = 3;";
+            String SQL = "SELECT * FROM public.user t WHERE t.username = '" + username + "' AND t.password = '" + password + "';";
+            Statement stmt = this.dbConnection.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+
+            // Iterate through the data in the result set and display it.  
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt(1));
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setStatus(rs.getInt(5));
+                user.setName(rs.getString(6));
+                return user;    
+            }
+            else {
+                return new User();
+            }
+            
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getMessage());
+        } finally {
+            if (this.dbConnection != null) {
+                try {
+                    this.dbConnection.close();
+                } catch (SQLException sqle) {
+                    System.err.println(sqle.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+    public ArrayList<User> getUserList() {
+        try {
+            String SQL = "SELECT * FROM public.user;";
             Statement stmt = this.dbConnection.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
             // Iterate through the data in the result set and display it. 
             
-            ArrayList<String> result = new ArrayList<String>();
+            ArrayList<User> result = new ArrayList<>();
             while(rs.next()){
-                result.add(rs.getString(1));
+                User user = new User();
+                user.setId(rs.getInt(1));
+                user.setUsername(rs.getString(2));
+                user.setPassword(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setStatus(rs.getInt(5));
+                user.setName(rs.getString(6));                
+                result.add(user);
             }
             return result;
         } catch (SQLException sqle) {
@@ -132,9 +182,10 @@ public class ConnectToSQL {
         try {
             String SQL = "UPDATE public.user SET name = '" + newName + "' WHERE id = " +
                     id + ";";
-            Statement stmt = this.dbConnection.createStatement();
-            stmt.executeUpdate(SQL);
-            stmt.close();
+            try (Statement stmt = this.dbConnection.createStatement()) {
+                stmt.executeUpdate(SQL);
+                return "Success";
+            }
         }
         catch (SQLException sqle) {
             System.err.println(sqle.getMessage());
@@ -147,7 +198,7 @@ public class ConnectToSQL {
                 }
             }
         }
-        return "Success";
+        return "Fail";
     }
       
     public String checkUser(String username) {
