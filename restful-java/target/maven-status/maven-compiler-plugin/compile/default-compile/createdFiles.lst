@@ -1,2 +1,7 @@
 org\netbeans\rest\application\config\ApplicationConfig.class
+vn\khmt\entity\User.class
+vn\khmt\support\Authorization.class
+vn\khmt\support\CORSResponseFilter.class
+vn\khmt\restful\UserService$1.class
+vn\khmt\restful\UserService.class
 vn\khmt\db\ConnectToSQL.class

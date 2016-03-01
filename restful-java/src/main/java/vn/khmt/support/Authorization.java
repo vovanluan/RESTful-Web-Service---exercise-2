@@ -12,7 +12,7 @@ import vn.khmt.db.ConnectToSQL;
 
 /**
  *
- * @author hoangdo
+ * @author Luan
  */
 public class Authorization {
 
