@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 E:\Study\Nam 4\HK II\Phát tri?n ?ng d?ng trên thi?t b? di ð?ng\Exercise\2\restful-java\src\main\java\vn\khmt\db\ConnectToSQL.java
 E:\Study\Nam 4\HK II\Phát tri?n ?ng d?ng trên thi?t b? di ð?ng\Exercise\2\restful-java\src\main\java\vn\khmt\entity\User.java
 E:\Study\Nam 4\HK II\Phát tri?n ?ng d?ng trên thi?t b? di ð?ng\Exercise\2\restful-java\src\main\java\vn\khmt\restful\UserService.java
 E:\Study\Nam 4\HK II\Phát tri?n ?ng d?ng trên thi?t b? di ð?ng\Exercise\2\restful-java\src\main\java\vn\khmt\support\Authorization.java
 E:\Study\Nam 4\HK II\Phát tri?n ?ng d?ng trên thi?t b? di ð?ng\Exercise\2\restful-java\src\main\java\org\netbeans\rest\application\config\ApplicationConfig.java
 E:\Study\Nam 4\HK II\Phát tri?n ?ng d?ng trên thi?t b? di ð?ng\Exercise\2\restful-java\src\main\java\vn\khmt\support\CORSResponseFilter.java
+=======
+C:\Users\Rana\Desktop\Rana\RESTful-Web-Service---exercise-2\restful-java\src\main\java\vn\khmt\restful\UserService.java
+C:\Users\Rana\Desktop\Rana\RESTful-Web-Service---exercise-2\restful-java\src\main\java\vn\khmt\support\Authorization.java
+C:\Users\Rana\Desktop\Rana\RESTful-Web-Service---exercise-2\restful-java\src\main\java\org\netbeans\rest\application\config\ApplicationConfig.java
+C:\Users\Rana\Desktop\Rana\RESTful-Web-Service---exercise-2\restful-java\src\main\java\vn\khmt\db\ConnectToSQL.java
+C:\Users\Rana\Desktop\Rana\RESTful-Web-Service---exercise-2\restful-java\src\main\java\vn\khmt\entity\User.java
+C:\Users\Rana\Desktop\Rana\RESTful-Web-Service---exercise-2\restful-java\src\main\java\vn\khmt\support\CORSResponseFilter.java
+>>>>>>> 9f54e67764b38a9565d1094f3e410b92a772d7ce
