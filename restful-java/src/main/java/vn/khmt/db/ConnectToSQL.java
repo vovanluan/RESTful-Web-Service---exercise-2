@@ -153,14 +153,15 @@ public class ConnectToSQL {
         }
         return null;
     }
-    public String addUser(String username, String password, String email, String name) {
+    public boolean addUser(User user) {
         try {        
-            String check = checkUser(username);
-            if (!check.equals(NOTMATCH)) return "Username existed";
+            String checkUser = checkUser(user.getUsername());
+            String checkEmail = checkEmail(user.getEmail());
+            if (!checkUser.equals(NOTMATCH) || !checkEmail.equals(NOTMATCH)) return false;
             this.dbConnection.setAutoCommit(false);
             Statement stmt = this.dbConnection.createStatement();
-            String SQL = "INSERT INTO public.user(id, username, password, email, status, name) SELECT MAX(t.id) + 1, '" + username 
-                        + "', '" + password + "', '" + email + "', 1, '" + name + "' FROM public.user t;";
+            String SQL = "INSERT INTO public.user(id, username, password, email, status, name) SELECT MAX(t.id) + 1, '" + user.getUsername()
+                        + "', '" + user.getPassword() + "', '" + user.getEmail() + "', 1, '" + user.getName() + "' FROM public.user t;";
             stmt.executeUpdate(SQL);
             stmt.close();
             this.dbConnection.commit();
@@ -175,7 +176,7 @@ public class ConnectToSQL {
                 }
             }
         }
-        return "Success";
+        return true;
     }
     
     public String updateUserName(int id, String newName) {
@@ -220,6 +221,26 @@ public class ConnectToSQL {
         }
         return null;
     }
+    
+    public String checkEmail(String email) {
+        try {
+            if (email != null) {
+                String SQL = "SELECT 1 FROM public.user u WHERE u.email = '" + email + "';";
+                Statement stmt = this.dbConnection.createStatement();
+                ResultSet rs = stmt.executeQuery(SQL);
+
+                // Iterate through the data in the result set and display it.  
+                if (rs.next()) {
+                    return "Exist";
+                } else {
+                    return NOTMATCH;
+                }
+            }
+        } catch (SQLException sqle) {
+            System.err.println(sqle.getMessage());
+        }
+        return null;
+    }    
 
     private static Timestamp getTimeStampOfDate(Date date) {
         if (date != null) {

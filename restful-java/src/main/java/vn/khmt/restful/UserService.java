@@ -10,6 +10,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -67,6 +68,18 @@ public class UserService {
                                @QueryParam("name") String name) {
         ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");
         return Response.status(200).entity(conn.updateUserName(id, name)).build();
+    }
+    
+    @POST
+    @Path("/add")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addName(User u) {
+        ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");     
+        boolean result = conn.addUser(u);
+        if(result) {
+            return Response.status(200).entity("Success").build();
+        }        
+        return Response.status(Response.Status.CREATED).entity("Failed").build();
     }
 
 }
