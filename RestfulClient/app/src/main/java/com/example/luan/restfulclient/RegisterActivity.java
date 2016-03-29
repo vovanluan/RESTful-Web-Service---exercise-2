@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,9 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import entity.User;
+import support.Support;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText username, password, confirmPassword, email, name;
@@ -48,54 +52,57 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setPassword(password.getText().toString());
                 user.setEmail(email.getText().toString());
                 user.setName(name.getText().toString());
-                String url = "http://localhost:8080/restful-java/user/add";
+                String url = "http://" + Support.HOST + ":8080/restful-java/user/add";
                 new RegisterRequest().execute(url);
             }
         });
     }
 
-    private class RegisterRequest extends AsyncTask<String, Void, Void> {
+    private class RegisterRequest extends AsyncTask<String, Void, Integer> {
 
         @Override
-        protected Void doInBackground(String... urls) {
+        protected Integer doInBackground(String... urls) {
             try {
+                Log.e("URL", urls[0]);
                 // Create connection
                 URL url = new URL(urls[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoInput(true);
                 urlConnection.setRequestProperty("Accept-Charset", "UTF-8");
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestMethod("POST");
                 urlConnection.connect();
 
                 // Convert this object to json string using gson
                 Gson gson = new Gson();
                 Type type = new TypeToken<User>(){}.getType();
                 String json = gson.toJson(user, type);
+                Log.e("Json", json);
 
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                 wr.write(json);
                 wr.flush();
+                Log.e("Response Message", urlConnection.getResponseMessage());
+                return urlConnection.getResponseCode();
 
-                int result = urlConnection.getResponseCode();
-                if (result == HttpURLConnection.HTTP_OK) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.putExtra("User", (Parcelable) user);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Error: " + urlConnection.getResponseMessage(), Toast.LENGTH_LONG).show();
-                }
             }
             catch (Exception e) {
 
             }
 
-            return null;
+            return 0;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer responseCode) {
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                intent.putExtra("User", (Parcelable) user);
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(RegisterActivity.this, "Error", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

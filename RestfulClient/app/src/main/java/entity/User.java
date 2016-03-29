@@ -1,4 +1,4 @@
-package com.example.luan.restfulclient;
+package entity;
 
 /**
  * Created by Luan on 29/03/2016.

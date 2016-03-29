@@ -1,11 +1,11 @@
 package com.example.luan.restfulclient;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,18 +15,16 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import com.example.luan.restfulclient.HomeActivity;
+
+import entity.User;
+import support.Support;
 
 public class LoginActivity extends AppCompatActivity {
     EditText username, password;
@@ -45,45 +43,35 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "http://localhost:8080/restful-java/user/login";
+                String url = "http://" + Support.HOST + ":8080/restful-java/user/login";
                 String query = "";
                 try {
-                    query = String.format("param1=%s&param2=%s",
+                    query = String.format("username=%s&password=%s",
                             URLEncoder.encode(username.getText().toString(), "UTF-8"),
                             URLEncoder.encode(password.getText().toString(), "UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 String REQUEST_URL = url + "?" + query;
+                Log.e("URL", REQUEST_URL);
                 new LoginRequest().execute(REQUEST_URL);
-                if (user != null) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.putExtra("User", (Parcelable) user);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"Wrong username or password", Toast.LENGTH_LONG).show();
-                    username.setText("");
-                    password.setText("");
-                }
-
             }
         });
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
     }
 
-    private class LoginRequest extends AsyncTask<String, Void, Void> {
+    private class LoginRequest extends AsyncTask<String, Void, Integer> {
 
         private String jsonResponse;
 
         @Override
-        protected Void doInBackground(String... urls) {
+        protected Integer doInBackground(String... urls) {
             try {
                 // Step 1 : Create a HttpURLConnection object send REQUEST to server
                 URL url = new URL(urls[0]);
@@ -104,24 +92,35 @@ public class LoginActivity extends AppCompatActivity {
                     stringBuilder.append(line);
                 }
                 jsonResponse = stringBuilder.toString();
+                Log.e("Json", jsonResponse);
+                return urlConnection.getResponseCode();
 
-            } catch (MalformedURLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                Log.e("error", e.toString());
             }
-            return null;
+            return 0;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Integer responseCode) {
             try {
-                // Step 4 : Convert JSON string to User object
-                Gson gson = new Gson();
-                Type  type = new TypeToken<User>(){}.getType();
-                user = gson.fromJson(jsonResponse, type);
+                Log.e("ResponseCode", String.valueOf(responseCode));
+
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    // Step 4 : Convert JSON string to User object
+                    Gson gson = new Gson();
+                    Type  type = new TypeToken<User>(){}.getType();
+                    user = gson.fromJson(jsonResponse, type);
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    //intent.putExtra("User", (Parcelable) user);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"Wrong username or password", Toast.LENGTH_LONG).show();
+                    username.setText("");
+                    password.setText("");
+                }
             } catch (Exception e) {
 
             }
