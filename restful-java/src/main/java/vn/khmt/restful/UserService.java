@@ -1,11 +1,8 @@
 package vn.khmt.restful;
 
-import com.sun.jersey.core.util.Base64;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Path;
@@ -50,6 +47,20 @@ public class UserService {
             return Response.status(401).entity("").build();
         }
     }
+    
+    @GET
+    @Path("/login")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUser(@QueryParam("username") String username,
+                            @QueryParam("password") String password) {
+        ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");
+        User user = conn.getUser(username, password);
+        if (user == null) {
+            return Response.status(404).entity(new User()).build();
+        }
+        return Response.status(200).entity(user).build();
+    }
+    
     @GET
     @Path("/all")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -80,7 +91,7 @@ public class UserService {
         if(result) {
             return Response.status(200).entity("Success").build();
         }        
-        return Response.status(Response.Status.CREATED).entity("Failed").build();
+        return Response.status(Response.Status.CONFLICT).entity("Failed").build();
     }
 
 }

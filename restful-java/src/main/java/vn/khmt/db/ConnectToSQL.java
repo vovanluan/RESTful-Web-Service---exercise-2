@@ -87,6 +87,7 @@ public class ConnectToSQL {
         }
         return null;
     }
+    
     public User getUser(String username, String password) {
         try {
             String SQL = "SELECT * FROM public.user t WHERE t.username = '" + username + "' AND t.password = '" + password + "';";
@@ -105,7 +106,7 @@ public class ConnectToSQL {
                 return user;    
             }
             else {
-                return new User();
+                return null;
             }
             
         } catch (SQLException sqle) {
