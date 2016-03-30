@@ -1,4 +1,4 @@
-package com.example.luan.restfulclient;
+package com.example.luan.activity;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

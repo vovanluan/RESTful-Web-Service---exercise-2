@@ -1,5 +1,8 @@
-package com.example.luan.restfulclient;
+package com.example.luan.activity;
 
+/**
+ * Created by Luan on 3/30/2016.
+ */
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,7 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,34 +20,31 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import entity.User;
 import support.Support;
+public class InformationActivity extends AppCompatActivity {
+    TextView email, name;
+    User user;
 
-public class HomeActivity extends AppCompatActivity {
-    EditText username, password, email, name;
-    Button update;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.user_info);
 
-        User user = (User) getIntent().getSerializableExtra("User");
+        user = (User) getIntent().getSerializableExtra("User");
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-        email = (EditText) findViewById(R.id.email);
-        name = (EditText) findViewById(R.id.name);
-        update = (Button) findViewById(R.id.update);
+        email = (TextView) findViewById(R.id.email);
+        name = (TextView) findViewById(R.id.name);
+       // update = (Button) findViewById(R.id.update);
 
-        // Show user info
+
+        email.setText("Email: " + user.getEmail());
+        name.setText("Name: "  + user.getName());
+/*
         username.setText(user.getUsername());
         username.setFocusable(false);
         username.setClickable(true);
         password.setText(user.getPassword());
-        email.setText(user.getEmail());
-        name.setText(user.getName());
-
 
 
         update.setOnClickListener(new View.OnClickListener() {
@@ -62,9 +63,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
     }
-    private class UpdateRequest extends AsyncTask<String, Void, Integer> {
+/*    private class UpdateRequest extends AsyncTask<String, Void, Integer> {
 
         public User u;
         @Override
@@ -100,5 +101,5 @@ public class HomeActivity extends AppCompatActivity {
             return 0;
         }
 
-    }
+    }*/
 }

@@ -66,12 +66,14 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserList(@Context HttpHeaders headers) {
         ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");
-        User autheticated = Authorization.authorized(headers);
-        if (autheticated.getStatus() == ADMIN_STATUS) {
+//        User autheticated = Authorization.authorized(headers);
+//        if (autheticated.getStatus() == ADMIN_STATUS) {
+//            ArrayList<User> result = conn.getUserList();
+//            return Response.status(200).entity(new GenericEntity<ArrayList<User>>(result){}).build();
+//        }
+//        return Response.status(Response.Status.UNAUTHORIZED).entity(null).build();      
             ArrayList<User> result = conn.getUserList();
             return Response.status(200).entity(new GenericEntity<ArrayList<User>>(result){}).build();
-        }
-        return Response.status(Response.Status.UNAUTHORIZED).entity(null).build();        
     }
     
 //    @PUT

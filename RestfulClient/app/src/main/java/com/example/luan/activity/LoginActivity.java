@@ -1,8 +1,8 @@
-package com.example.luan.restfulclient;
+package com.example.luan.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,8 +68,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private class LoginRequest extends AsyncTask<String, Void, Integer> {
-
         private String jsonResponse;
+        private final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Log in...");
+            this.dialog.setCancelable(false);
+            this.dialog.show();
+        }
 
         @Override
         protected Integer doInBackground(String... urls) {
@@ -107,7 +113,9 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(Integer responseCode) {
             try {
                 Log.e("ResponseCode", String.valueOf(responseCode));
-
+                if (this.dialog.isShowing()) {
+                    this.dialog.dismiss();
+                }
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     // Step 4 : Convert JSON string to User object
                     Gson gson = new Gson();

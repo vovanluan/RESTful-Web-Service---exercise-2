@@ -1,9 +1,9 @@
-package com.example.luan.restfulclient;
+package com.example.luan.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -60,7 +60,13 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private class RegisterRequest extends AsyncTask<String, Void, Integer> {
-
+        private final ProgressDialog dialog = new ProgressDialog(RegisterActivity.this);
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Sign up...");
+            this.dialog.setCancelable(false);
+            this.dialog.show();
+        }
         @Override
         protected Integer doInBackground(String... urls) {
             try {
@@ -97,7 +103,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Integer responseCode) {
-
+            if (this.dialog.isShowing()) {
+                this.dialog.dismiss();
+            }
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
                 intent.putExtra("User", (Serializable) user);
@@ -106,6 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
             else {
                 Toast.makeText(RegisterActivity.this, "Error", Toast.LENGTH_LONG).show();
             }
+
         }
     }
 }
