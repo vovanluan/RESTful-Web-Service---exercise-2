@@ -74,12 +74,24 @@ public class UserService {
         return Response.status(Response.Status.UNAUTHORIZED).entity(null).build();        
     }
     
+//    @PUT
+//    @Path("/rename")
+//    public Response updateName(@QueryParam("id") int id,
+//                               @QueryParam("name") String name) {
+//        ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");
+//        return Response.status(200).entity(conn.updateUserName(id, name)).build();
+//    }
+    
     @PUT
-    @Path("/rename")
-    public Response updateName(@QueryParam("id") int id,
-                               @QueryParam("name") String name) {
-        ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");
-        return Response.status(200).entity(conn.updateUserName(id, name)).build();
+    @Path("/updateInfo")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateInfo(User u){
+        ConnectToSQL conn = new ConnectToSQL("POSTGRESQL", "ec2-54-227-253-228.compute-1.amazonaws.com:5432", "d8viikojj42e3b", "uzufecmqojhnyx", "WPJGueUbd3npLKslU2BEUOmMHx");     
+        boolean result = conn.updateUserInfo(u);
+        if (result) {
+            return Response.status(Response.Status.OK).entity("").build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).entity("Failed").build();
     }
     
     @POST

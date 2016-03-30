@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -113,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                     Type  type = new TypeToken<User>(){}.getType();
                     user = gson.fromJson(jsonResponse, type);
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    //intent.putExtra("User", (Parcelable) user);
+                    intent.putExtra("User", (Serializable) user);
                     startActivity(intent);
                 }
                 else {

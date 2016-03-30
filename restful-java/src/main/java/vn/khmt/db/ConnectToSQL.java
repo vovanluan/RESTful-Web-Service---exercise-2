@@ -184,6 +184,7 @@ public class ConnectToSQL {
         try {
             String SQL = "UPDATE public.user SET name = '" + newName + "' WHERE id = " +
                     id + ";";
+            System.out.println(SQL);
             try (Statement stmt = this.dbConnection.createStatement()) {
                 stmt.executeUpdate(SQL);
                 return "Success";
@@ -201,6 +202,21 @@ public class ConnectToSQL {
             }
         }
         return "Fail";
+    }
+    
+    public boolean updateUserInfo(User u) {
+        try {
+            String SQL = "UPDATE public.user SET password = '" + u.getPassword() +"', email = '" 
+                    + u.getEmail() +"', name = '" +u.getName() + "' WHERE username = '" + u.getUsername() +"';";
+            System.out.println(SQL);
+            Statement stmt = this.dbConnection.createStatement();
+            stmt.executeUpdate(SQL);
+            return true;
+        }
+        catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return false;
     }
       
     public String checkUser(String username) {

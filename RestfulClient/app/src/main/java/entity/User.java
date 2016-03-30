@@ -3,11 +3,14 @@ package entity;
 /**
  * Created by Luan on 29/03/2016.
  */
+
+import java.io.Serializable;
+
 /**
  *
  * @author Luan
  */
-public class User {
+public class User implements Serializable {
     private String email;
     private int id;
     private String name;

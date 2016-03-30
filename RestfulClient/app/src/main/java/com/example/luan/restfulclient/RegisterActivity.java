@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -67,8 +68,9 @@ public class RegisterActivity extends AppCompatActivity {
                 // Create connection
                 URL url = new URL(urls[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoInput(true);
+                urlConnection.setDoOutput(true);
                 urlConnection.setRequestProperty("Accept-Charset", "UTF-8");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestMethod("POST");
                 urlConnection.connect();
 
@@ -81,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                 wr.write(json);
                 wr.flush();
+                wr.close();
                 Log.e("Response Message", urlConnection.getResponseMessage());
                 return urlConnection.getResponseCode();
 
@@ -97,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                intent.putExtra("User", (Parcelable) user);
+                intent.putExtra("User", (Serializable) user);
                 startActivity(intent);
             }
             else {
